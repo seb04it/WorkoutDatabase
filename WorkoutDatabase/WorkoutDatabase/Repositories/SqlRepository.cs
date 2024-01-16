@@ -16,7 +16,7 @@ namespace WorkoutDatabase.Repositories
 
         public IEnumerable<T> GetAll()
         {
-            return _dbSet.ToList();
+            return _dbSet.OrderBy(entity => (entity as EntityBase).Id).ToList();
         }
 
         public T? GetById(int id)
