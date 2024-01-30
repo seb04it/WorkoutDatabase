@@ -22,13 +22,13 @@ namespace WorkoutDatabase.Repositories
             return _items.Single(item => item.Id == id);
         }
 
-        public void Add(T item)
+        public void AddWorkout(T item)
         {
             item.Id = _items.Count + 1;
             _items.Add(item);
         }
 
-        public void Remove(T item)
+        public void RemoveWorkout(T item)
         {
             _items.Remove(item);
         }
