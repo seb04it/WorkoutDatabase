@@ -5,7 +5,7 @@ using WorkoutDatabase.Entities;
 
 namespace WorkoutDatabase.Repositories
 {
-
+    public delegate void LastUsedAdded(object item);
     public class JsonRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
         private static readonly string JsonFilePath = "workouts.json";

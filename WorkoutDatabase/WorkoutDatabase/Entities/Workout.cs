@@ -13,13 +13,11 @@ namespace WorkoutDatabase.Entities
         public string? SongName { get; set; }
         public TimeSpan? WorkoutLenght { get; set; }
         public DateTime? LastUsed { get; set; }
-        public int? TimesUsed { get; set; }
 
         public override string ToString() => $"Id {Id}, " +
             $"WorkoutCategory: {WorkoutCategory}, " +
             $"Song: {SongName}, " +
             $"Workout Lenght: {WorkoutLenght?.ToString("mm\\:ss")}, " +
-            $"Last Used: {LastUsed?.ToString("dd\\.MM\\.yyyy HH\\:mm\\:ss")}, " +
-            $"Times Used: {TimesUsed}\t";
+            $"Last Used: {LastUsed?.ToString("dd\\.MM\\.yyyy HH\\:mm\\:ss")}";
     }
 }
