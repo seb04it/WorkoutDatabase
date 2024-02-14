@@ -15,6 +15,7 @@ namespace WorkoutDatabase.Repositories
 
         public event EventHandler<T>? WorkoutAdded;
         public event EventHandler<T>? WorkoutRemoved;
+        public event EventHandler<T>? WorkoutLastUsed;
 
         public JsonRepository()
         {
@@ -26,14 +27,20 @@ namespace WorkoutDatabase.Repositories
             item.Id = _items.Count + 1;
             _items.Add(item);
             WorkoutAdded?.Invoke(this, item);
-            LogAudit($"Added {typeof(T).Name} => {item}");
+            LogAudit($"WorkoutAdded {typeof(T).Name} => {item}");
         }
 
         public void RemoveWorkout(T item)
         {
             _items.Remove(item);
             WorkoutRemoved?.Invoke(this, item);
-            LogAudit($"Removed {typeof(T).Name} => {item}");
+            LogAudit($"WorkoutRemoved {typeof(T).Name} => {item}");
+        }
+
+        public void LastUsedWorkout(T item)
+        {
+            WorkoutLastUsed?.Invoke(this, item);
+            LogAudit($"WorkoutLastUsed updated {typeof(T).Name} => {item}");
         }
 
         public IEnumerable<T> GetAll()

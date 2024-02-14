@@ -12,12 +12,13 @@ namespace WorkoutDatabase
             var workoutRepository = new JsonRepository<Workout>();
             workoutRepository.WorkoutAdded += JsonRepositoryWorkoutAdded;
             workoutRepository.WorkoutRemoved += JsonRepositoryWorkoutRemoved;
+            workoutRepository.WorkoutLastUsed += JsonRepositoryWorkoutLastUsed;
 
             while (true)
             {
                 Console.Write("\nWitaj w programie treningowym!\n" +
                 "Czego ci potrzeba?\n" +
-                "\n1. Wyświetl listę ćwiczeń\n" +
+                "\n1. Wyświetl listę ćwiczeńa\n" +
                 "2. Dodaj nowe ruch\n" +
                 "3. Usuń ruch\n" +
                 "4. Dodaj datę ostatniego użycia ćwiczenia\n" +
@@ -68,7 +69,7 @@ namespace WorkoutDatabase
                 if (workoutToUpdate != null)
                 {
                     Console.Write("\nWybierz sposób dodania daty ostatniego użycia:\n" +
-                        "1. \nData dzisiejsza\n" +
+                        "\n1. Data dzisiejsza\n" +
                         "2. Samodzielne wpisanie\n" +
                         "\nWybór: ");
                     var choice = Console.ReadLine().ToLower();
@@ -76,6 +77,7 @@ namespace WorkoutDatabase
                     {
                         case "1":
                             workoutToUpdate.LastUsed = DateTime.Now.Date;
+                            workoutRepository.LastUsedWorkout(workoutToUpdate);
                             workoutRepository.SaveWorkout();
                             Console.WriteLine("Data ostatniego użycia została zaktualizowana!\n");
                             break;
@@ -84,7 +86,7 @@ namespace WorkoutDatabase
                             if (DateTime.TryParseExact(Console.ReadLine(), "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out var date))
                             {
                                 workoutToUpdate.LastUsed = date;
-
+                                workoutRepository.LastUsedWorkout(workoutToUpdate);
                                 workoutRepository.SaveWorkout();
                                 Console.WriteLine("Date ostatniego użycia dodano pomyślnie!");
                                 break;
@@ -136,7 +138,7 @@ namespace WorkoutDatabase
                 }
                 else
                 {
-                    throw new Exception("Form of time is invalid. Try again (minutes:seconds)");
+                    throw new Exception("Form of time is invalid. Try (minutes:seconds)");
                 }
             }
             catch (Exception exception)
@@ -184,6 +186,11 @@ namespace WorkoutDatabase
         static void JsonRepositoryWorkoutRemoved(object? sender, Workout entity)
         {
             Console.WriteLine($"Workout removed => {entity.WorkoutCategory}, {entity.SongName} from {sender?.GetType().Name}");
+        }
+
+        static void JsonRepositoryWorkoutLastUsed(object? sender, Workout entity)
+        {
+            Console.WriteLine($"WorkoutLastUsed update => {entity.WorkoutCategory}, {entity.SongName} from {sender?.GetType().Name}");
         }
     }
 }
