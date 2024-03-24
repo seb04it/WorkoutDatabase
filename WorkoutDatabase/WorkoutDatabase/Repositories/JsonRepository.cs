@@ -1,15 +1,14 @@
 ﻿
-using System.Data;
 using System.Text.Json;
-using WorkoutDatabase.Entities;
+using WorkoutApp.Entities;
 
-namespace WorkoutDatabase.Repositories
+namespace WorkoutApp.Repositories
 {
-    public delegate void LastUsedAdded(object item);
     public class JsonRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
         private static readonly string JsonFilePath = "workouts.json";
         private static readonly string LogFilePath = "workoutsLog.log";
+        private static readonly string WorkoutCategoryFilePath = "workoutsCategory.json";
 
         protected readonly List<T> _items = new();
 
@@ -19,12 +18,15 @@ namespace WorkoutDatabase.Repositories
 
         public JsonRepository()
         {
+            LoadDataCategory();
             LoadData();
         }
 
         public void AddWorkout(T item)
         {
-            item.Id = _items.Count + 1;
+            int maxId = _items.Count > 0 ? _items.Max(i => i.Id) : 1;
+            item.Id = maxId + 1;
+
             _items.Add(item);
             WorkoutAdded?.Invoke(this, item);
             LogAudit($"WorkoutAdded {typeof(T).Name} => {item}");
@@ -37,8 +39,13 @@ namespace WorkoutDatabase.Repositories
             LogAudit($"WorkoutRemoved {typeof(T).Name} => {item}");
         }
 
-        public void LastUsedWorkout(T item)
+        public void LastUsedWorkout(T item, DateTime lastUsedDate)
         {
+            if (item is Workout workout)
+            {
+                workout.LastUsed = lastUsedDate;
+            }
+
             WorkoutLastUsed?.Invoke(this, item);
             LogAudit($"WorkoutLastUsed updated {typeof(T).Name} => {item}");
         }
@@ -58,7 +65,19 @@ namespace WorkoutDatabase.Repositories
             var json = JsonSerializer.Serialize<IEnumerable<T>>(_items);
             File.WriteAllText(JsonFilePath, json);
         }
-
+        public IEnumerable<T> LoadDataCategory()
+        {
+            if (File.Exists(WorkoutCategoryFilePath))
+            {
+                var json = File.ReadAllText(WorkoutCategoryFilePath);
+                var deserializedJson = JsonSerializer.Deserialize<IEnumerable<T>>(json);
+                foreach (var item in deserializedJson)
+                {
+                    _items.Add(item);
+                }
+            }
+            return _items.ToList();
+        }
         public IEnumerable<T> LoadData()
         {
             if (File.Exists(JsonFilePath))

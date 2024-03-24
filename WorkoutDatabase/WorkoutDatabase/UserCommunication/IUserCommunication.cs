@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorkoutApp.Entities
+namespace WorkoutApp.UserCommunication
 {
-    public interface IEntity
+    public interface IUserCommunication
     {
-        int Id { get; set; }
+        void Menu();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WorkoutDatabase.Entities;
+using WorkoutApp.Entities;
 
-namespace WorkoutDatabase.Data
+namespace WorkoutApp.Data
 {
     public class WorkoutDbContext : DbContext
     {
@@ -10,7 +10,7 @@ namespace WorkoutDatabase.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseInMemoryDatabase("WorkoutStorageDb");
+            optionsBuilder.UseInMemoryDatabase("WorkoutAppStorageDb");
         }
     }
 }
