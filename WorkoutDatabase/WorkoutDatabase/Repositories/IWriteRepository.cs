@@ -1,7 +1,7 @@
 ﻿
-using WorkoutApp.Entities;
+using WorkoutDataBase.Entities;
 
-namespace WorkoutApp.Repositories
+namespace WorkoutDataBase.Repositories
 {
     public interface IWriteRepository<in T> where T : class, IEntity
     {

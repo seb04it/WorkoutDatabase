@@ -1,8 +1,8 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using WorkoutApp.Entities;
+using WorkoutDataBase.Entities;
 
-namespace WorkoutApp.Repositories
+namespace WorkoutDataBase.Repositories
 {
     public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
     {

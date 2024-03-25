@@ -1,22 +1,19 @@
 ﻿
-using WorkoutApp.App;
-using WorkoutApp.Entities;
-using WorkoutApp.Repositories;
-using Microsoft.EntityFrameworkCore;
+using WorkoutDataBase.App;
+using WorkoutDataBase.Entities;
+using WorkoutDataBase.Repositories;
 
-namespace WorkoutApp.UserCommunication
+namespace WorkoutDataBase.UserCommunication
 {
     public class UserCommunication : IUserCommunication
     {
         private readonly IApp _app;
         private readonly IRepository<Workout> _workoutRepository;
-        private readonly DbContext _dbContext;
 
-        public UserCommunication(IApp app, IRepository<Workout> workoutRepository, DbContext dbContext)
+        public UserCommunication(IApp app, IRepository<Workout> workoutRepository)
         {
             _app = app;
             _workoutRepository = workoutRepository;
-            _dbContext = dbContext;
         }
 
         public void Menu()

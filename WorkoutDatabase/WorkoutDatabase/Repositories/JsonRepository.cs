@@ -1,8 +1,8 @@
 ﻿
 using System.Text.Json;
-using WorkoutApp.Entities;
+using WorkoutDataBase.Entities;
 
-namespace WorkoutApp.Repositories
+namespace WorkoutDataBase.Repositories
 {
     public class JsonRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
