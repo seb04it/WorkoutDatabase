@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WorkoutApp.Entities;
+using WorkoutDataBase.Entities;
 
-namespace WorkoutApp.Repositories
+namespace WorkoutDataBase.Repositories
 {
     public interface IReadRepository<out T> where T : class, IEntity
     {

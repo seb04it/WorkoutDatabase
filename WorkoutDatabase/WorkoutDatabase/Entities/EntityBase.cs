@@ -5,7 +5,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorkoutApp.Entities
+namespace WorkoutDataBase.Entities
 {
     abstract public class EntityBase : IEntity
     {

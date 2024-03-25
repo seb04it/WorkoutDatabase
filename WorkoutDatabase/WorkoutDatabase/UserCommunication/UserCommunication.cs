@@ -2,6 +2,7 @@
 using WorkoutApp.App;
 using WorkoutApp.Entities;
 using WorkoutApp.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace WorkoutApp.UserCommunication
 {
@@ -9,12 +10,13 @@ namespace WorkoutApp.UserCommunication
     {
         private readonly IApp _app;
         private readonly IRepository<Workout> _workoutRepository;
+        private readonly DbContext _dbContext;
 
-
-        public UserCommunication(IApp app, IRepository<Workout> workoutRepository)
+        public UserCommunication(IApp app, IRepository<Workout> workoutRepository, DbContext dbContext)
         {
             _app = app;
             _workoutRepository = workoutRepository;
+            _dbContext = dbContext;
         }
 
         public void Menu()

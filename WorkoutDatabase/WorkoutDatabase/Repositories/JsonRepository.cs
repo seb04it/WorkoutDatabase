@@ -8,7 +8,7 @@ namespace WorkoutApp.Repositories
     {
         private static readonly string JsonFilePath = "workouts.json";
         private static readonly string LogFilePath = "workoutsLog.log";
-        private static readonly string WorkoutCategoryFilePath = "workoutsCategory.json";
+        private static readonly string WorkoutCategoryFilePath = "workoutsCategory.json"; //Will implement soon (probably)
 
         protected readonly List<T> _items = new();
 

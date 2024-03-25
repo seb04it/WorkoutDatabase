@@ -1,9 +1,9 @@
 ﻿
-using WorkoutApp.DataProvider;
-using WorkoutApp.Entities;
-using WorkoutApp.Repositories;
+using WorkoutDataBase.DataProvider;
+using WorkoutDataBase.Entities;
+using WorkoutDataBase.Repositories;
 
-namespace WorkoutApp.App
+namespace WorkoutDataBase.App
 {
     public class App : IApp
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WorkoutApp.Entities;
+using WorkoutDataBase.Entities;
 
-namespace WorkoutApp.Data
+namespace WorkoutDataBase.Data
 {
     public class WorkoutDbContext : DbContext
     {

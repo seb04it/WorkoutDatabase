@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WorkoutApp.Entities;
+﻿using WorkoutDataBase.Entities;
 
-namespace WorkoutApp.Repositories
+namespace WorkoutDataBase.Repositories
 {
     public interface IRepository<T> : IWriteRepository<T>, IReadRepository<T>
         where T : class, IEntity

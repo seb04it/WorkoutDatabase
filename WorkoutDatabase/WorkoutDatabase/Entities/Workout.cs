@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorkoutApp.Entities
+namespace WorkoutDataBase.Entities
 {
     public class Workout : EntityBase
     {

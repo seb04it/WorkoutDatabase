@@ -4,9 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WorkoutApp.Entities;
+using WorkoutDataBase.Entities;
 
-namespace WorkoutApp.DataProvider
+namespace WorkoutDataBase.DataProvider
 {
     public interface IWorkoutsProvider
     {

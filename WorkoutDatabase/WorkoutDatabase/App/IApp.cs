@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WorkoutApp.Entities;
-using WorkoutApp.Repositories;
+using WorkoutDataBase.Entities;
+using WorkoutDataBase.Repositories;
 
-namespace WorkoutApp.App
+namespace WorkoutDataBase.App
 {
     public interface IApp
     {

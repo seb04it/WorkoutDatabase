@@ -81,6 +81,15 @@ namespace WorkoutApp.DataProvider
                 .ToList();
         }
 
-        
+        public List<Workout> WhereCategoryis(string category)
+        {
+            var workouts = _workoutsRepository.GetAll();
+            return workouts
+                .Where(x=>x.WorkoutCategory == category)
+                .ToList();
+        }
+
+
+
     }
 }
