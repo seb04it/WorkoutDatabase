@@ -24,6 +24,7 @@ namespace WorkoutDataBase.Repositories
         public void AddWorkout(T item)
         {
             _dbSet.Add(item);
+            SaveWorkout();
             WorkoutAdded?.Invoke(this, item);
             LogAudit($"WorkoutAdded {typeof(T).Name} => {item}");
         }
@@ -45,6 +46,7 @@ namespace WorkoutDataBase.Repositories
                 workout.LastUsed = lastUsedDate;
             }
 
+            SaveWorkout();
             WorkoutLastUsed?.Invoke(this, item);
             LogAudit($"WorkoutLastUsed updated {typeof(T).Name} => {item}");
         }
@@ -52,13 +54,21 @@ namespace WorkoutDataBase.Repositories
         public void RemoveWorkout(T item)
         {
             _dbSet.Remove(item);
+            SaveWorkout();
             WorkoutRemoved?.Invoke(this, item);
             LogAudit($"WorkoutRemoved {typeof(T).Name} => {item}");
         }
 
-        public void SaveWorkout()
+        public virtual void SaveWorkout()
         {
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"Error occoured while saving {exception.Message}");
+            }
         }
         public void LogAudit(string logEntry)
         {

@@ -104,7 +104,6 @@ namespace WorkoutDataBase.App
                         ArtistName = artistName,
                         WorkoutLength = workoutLenght
                     });
-                    workoutRepository.SaveWorkout();
                     Console.WriteLine($"Ćwiczenie {songName} dodano pomyślnie!");
                 }
                 else
@@ -143,7 +142,6 @@ namespace WorkoutDataBase.App
                         {
                             case "1":
                                 _workoutRepository.LastUsedWorkout(workoutToUpdate, DateTime.Now.Date);
-                                _workoutRepository.SaveWorkout();
                                 Console.WriteLine("Data ostatniego użycia została zaktualizowana!\n");
                                 break;
                             case "2":
@@ -152,7 +150,6 @@ namespace WorkoutDataBase.App
                                 if (DateTime.TryParseExact(inputDate, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out var date))
                                 {
                                     _workoutRepository.LastUsedWorkout(workoutToUpdate, date);
-                                    _workoutRepository.SaveWorkout();
                                     Console.WriteLine("Date ostatniego użycia dodano pomyślnie!");
                                     break;
                                 }
@@ -194,7 +191,6 @@ namespace WorkoutDataBase.App
                     if (workoutToRemoveId != null)
                     {
                         _workoutRepository.RemoveWorkout(workoutToRemoveId);
-                        _workoutRepository.SaveWorkout();
                         Console.WriteLine("Ćwiczenie usunięte pomyślnie!");
                     }
                 }

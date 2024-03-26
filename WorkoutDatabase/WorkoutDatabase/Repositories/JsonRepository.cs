@@ -28,6 +28,7 @@ namespace WorkoutDataBase.Repositories
             item.Id = maxId + 1;
 
             _items.Add(item);
+            SaveWorkout();
             WorkoutAdded?.Invoke(this, item);
             LogAudit($"WorkoutAdded {typeof(T).Name} => {item}");
         }
@@ -35,6 +36,7 @@ namespace WorkoutDataBase.Repositories
         public void RemoveWorkout(T item)
         {
             _items.Remove(item);
+            SaveWorkout();
             WorkoutRemoved?.Invoke(this, item);
             LogAudit($"WorkoutRemoved {typeof(T).Name} => {item}");
         }
@@ -46,6 +48,7 @@ namespace WorkoutDataBase.Repositories
                 workout.LastUsed = lastUsedDate;
             }
 
+            SaveWorkout();
             WorkoutLastUsed?.Invoke(this, item);
             LogAudit($"WorkoutLastUsed updated {typeof(T).Name} => {item}");
         }
@@ -60,10 +63,17 @@ namespace WorkoutDataBase.Repositories
             return _items.Find(item => item.Id == id);
         }
 
-        public void SaveWorkout()
+        public virtual void SaveWorkout()
         {
-            var json = JsonSerializer.Serialize<IEnumerable<T>>(_items);
-            File.WriteAllText(JsonFilePath, json);
+            try
+            {
+                var json = JsonSerializer.Serialize<IEnumerable<T>>(_items);
+                File.WriteAllText(JsonFilePath, json);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"Error occoured while saving {exception.Message}");
+            }
         }
         public IEnumerable<T> LoadDataCategory()
         {
