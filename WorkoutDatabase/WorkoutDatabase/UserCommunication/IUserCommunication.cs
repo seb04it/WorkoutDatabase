@@ -1,7 +1,7 @@
-﻿using WorkoutDataBase.Repositories;
-using WorkoutDataBase.Data;
+﻿using WorkoutDatabase.Data.Repositories;
+using WorkoutDatabase.Data;
 
-namespace WorkoutDataBase.UserCommunication
+namespace WorkoutDatabase.UserCommunication
 {
     public interface IUserCommunication
     {

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorkoutDataBase.Entities
+namespace WorkoutDatabase.Entities
 {
-    public class Workout : EntityBase
+    public class WorkoutEntities : EntityBase
     {
         public string? WorkoutCategory { get; set; }
         public string? SongName { get; set; }
@@ -20,6 +20,6 @@ namespace WorkoutDataBase.Entities
             $"Song: {SongName}, " +
             $"Artist: {ArtistName}, " +
             $"Workout Lenght: {WorkoutLength?.ToString("mm\\:ss")}, " +
-            $"Last Used: {LastUsed?.ToString("dd\\.MM\\.yyyy HH\\:mm\\:ss")}";
+            $"Last Used: {LastUsed?.ToString("dd\\.MM\\.yyyy")}";
     }
 }

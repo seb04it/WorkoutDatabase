@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorkoutDataBase.Entities
+namespace WorkoutDatabase.Entities
 {
     public interface IEntity
     {

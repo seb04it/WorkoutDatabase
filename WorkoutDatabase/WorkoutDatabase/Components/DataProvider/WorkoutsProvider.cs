@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WorkoutDataBase.Entities;
-using WorkoutDataBase.Repositories;
+using WorkoutDatabase.Entities;
+using WorkoutDatabase.Data.Repositories;
 
-namespace WorkoutDataBase.DataProvider
+namespace WorkoutDatabase.Components.DataProvider
 {
     public class WorkoutsProvider : IWorkoutsProvider
     {
-        private readonly IRepository<Workout> _workoutsRepository;
-        public WorkoutsProvider(IRepository<Workout> workoutRepository)
+        private readonly IRepository<WorkoutEntities> _workoutsRepository;
+        public WorkoutsProvider(IRepository<WorkoutEntities> workoutRepository)
         {
             _workoutsRepository = workoutRepository;
         }
 
-        public List<Workout> Paging(int itemsPerPage, int page)
+        public List<WorkoutEntities> Paging(int itemsPerPage, int page)
         {
             var workouts = _workoutsRepository.GetAll();
             return workouts
                 //.OrderBy(x => x.Id)
-                .Skip(itemsPerPage*(page-1))
+                .Skip(itemsPerPage * (page - 1))
                 .Take(itemsPerPage)
                 .ToList();
         }
@@ -34,7 +34,7 @@ namespace WorkoutDataBase.DataProvider
             var minWorkout = workouts
                 .First(x => x.WorkoutLength == minWorkoutLength.Value);
 
-            if(minWorkout != null)
+            if (minWorkout != null)
             {
                 return (minWorkoutLength.Value, minWorkout.SongName, minWorkout.Id);
             }
@@ -73,7 +73,7 @@ namespace WorkoutDataBase.DataProvider
             return songs;
         }
 
-        public List<Workout> TakeWorkoutsWhereSongNameStartsWith(string prefix)
+        public List<WorkoutEntities> TakeWorkoutsWhereSongNameStartsWith(string prefix)
         {
             var workouts = _workoutsRepository.GetAll();
             return workouts
@@ -81,11 +81,11 @@ namespace WorkoutDataBase.DataProvider
                 .ToList();
         }
 
-        public List<Workout> WhereCategoryis(string category)
+        public List<WorkoutEntities> WhereCategoryis(string category)
         {
             var workouts = _workoutsRepository.GetAll();
             return workouts
-                .Where(x=>x.WorkoutCategory == category)
+                .Where(x => x.WorkoutCategory == category)
                 .ToList();
         }
 

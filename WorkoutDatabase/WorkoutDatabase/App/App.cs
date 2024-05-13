@@ -1,32 +1,32 @@
 ﻿
-using WorkoutDataBase.DataProvider;
-using WorkoutDataBase.Entities;
-using WorkoutDataBase.Repositories;
+using WorkoutDatabase.Components.DataProvider;
+using WorkoutDatabase.Data.Repositories;
+using WorkoutDatabase.Entities;
 
-namespace WorkoutDataBase.App
+namespace WorkoutDatabase.App
 {
     public class App : IApp
     {
-        private readonly IRepository<Workout> _workoutRepository;
+        private readonly IRepository<WorkoutEntities> _workoutRepository;
         private readonly IWorkoutsProvider _workoutsProvider;
 
-        public App(IRepository<Workout> workoutRepository, IWorkoutsProvider workoutsProvider)
+        public App(IRepository<WorkoutEntities> workoutRepository, IWorkoutsProvider workoutsProvider)
         {
             _workoutRepository = workoutRepository;
             _workoutsProvider = workoutsProvider;
         }
 
-        public void JsonRepositoryWorkoutAdded(object? sender, Workout entity)
+        public void RepositoryWorkoutAdded(object? sender, WorkoutEntities entity)
         {
             Console.Clear();
             Console.WriteLine($"Workout added => ID.{entity.Id}, {entity.SongName} from {sender?.GetType().Name}");
         }
-        public void JsonRepositoryWorkoutRemoved(object? sender, Workout entity)
+        public void RepositoryWorkoutRemoved(object? sender, WorkoutEntities entity)
         {
             Console.Clear();
             Console.WriteLine($"Workout removed => ID.{entity.Id}, {entity.SongName} from {sender?.GetType().Name}");
         }
-        public void JsonRepositoryWorkoutLastUsed(object? sender, Workout entity)
+        public void RepositoryWorkoutLastUsed(object? sender, WorkoutEntities entity)
         {
             Console.Clear();
             Console.WriteLine($"WorkoutLastUsed update => ID.{entity.Id}, {entity.SongName} from {sender?.GetType().Name}");
@@ -84,7 +84,7 @@ namespace WorkoutDataBase.App
             }
         }
 
-        public void AddWorkout(IRepository<Workout> workoutRepository)
+        public void AddWorkout(IRepository<WorkoutEntities> workoutRepository)
         {
             Console.Write("\nPodaj kategorię ćwiczenia: ");
             var workoutCategory = Console.ReadLine();
@@ -97,7 +97,7 @@ namespace WorkoutDataBase.App
             {
                 if (TimeSpan.TryParseExact(Console.ReadLine(), "mm':'ss", null, out var workoutLenght))
                 {
-                    _workoutRepository.AddWorkout(new Workout
+                    _workoutRepository.AddWorkout(new WorkoutEntities
                     {
                         WorkoutCategory = workoutCategory,
                         SongName = songName,
@@ -118,7 +118,7 @@ namespace WorkoutDataBase.App
             }
         }
 
-        public void LastUsedWorkout(IRepository<Workout> workoutRepository)
+        public void LastUsedWorkout(IRepository<WorkoutEntities> workoutRepository)
         {
             var items = _workoutRepository.GetAll().ToList();
             foreach (var item in items)
@@ -174,7 +174,7 @@ namespace WorkoutDataBase.App
             }
         }
 
-        public void RemoveWorkout(IRepository<Workout> workoutRepository)
+        public void RemoveWorkout(IRepository<WorkoutEntities> workoutRepository)
         {
             Console.WriteLine("\nList Ćwiczeń: ");
             var items = _workoutRepository.GetAll().ToList();

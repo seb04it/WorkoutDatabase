@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WorkoutDataBase.Entities;
-using WorkoutDataBase.Repositories;
+using WorkoutDatabase.Entities;
+using WorkoutDatabase.Data.Repositories;
 
-namespace WorkoutDataBase.App
+namespace WorkoutDatabase.App
 {
     public interface IApp
     {
-        void JsonRepositoryWorkoutAdded(object? sender, Workout entity);
-        void JsonRepositoryWorkoutRemoved(object? sender, Workout entity);
-        void JsonRepositoryWorkoutLastUsed(object? sender, Workout entity);
+        void RepositoryWorkoutAdded(object? sender, WorkoutEntities entity);
+        void RepositoryWorkoutRemoved(object? sender, WorkoutEntities entity);
+        void RepositoryWorkoutLastUsed(object? sender, WorkoutEntities entity);
         void WorkoutProviders();
         void WriteAllToConsole(IReadRepository<IEntity> workoutRepository);
-        void AddWorkout(IRepository<Workout> workoutRepository);
-        void RemoveWorkout(IRepository<Workout> workoutRepository);
-        void LastUsedWorkout(IRepository<Workout> workoutRepository);
+        void AddWorkout(IRepository<WorkoutEntities> workoutRepository);
+        void RemoveWorkout(IRepository<WorkoutEntities> workoutRepository);
+        void LastUsedWorkout(IRepository<WorkoutEntities> workoutRepository);
     }
 }

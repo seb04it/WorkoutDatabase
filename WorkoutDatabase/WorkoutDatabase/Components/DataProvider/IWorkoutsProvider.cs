@@ -4,16 +4,16 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WorkoutDataBase.Entities;
+using WorkoutDatabase.Entities;
 
-namespace WorkoutDataBase.DataProvider
+namespace WorkoutDatabase.Components.DataProvider
 {
     public interface IWorkoutsProvider
     {
-        List<Workout> Paging(int itemPerPageTake, int page);
+        List<WorkoutEntities> Paging(int itemPerPageTake, int page);
         (TimeSpan minWorkoutLength, string SongName, int Id) GetMinimumSongLenght();
         List<string> GetUniqueSongNames();
-        List<Workout> TakeWorkoutsWhereSongNameStartsWith(string prefix);
+        List<WorkoutEntities> TakeWorkoutsWhereSongNameStartsWith(string prefix);
         (DateTime LastUsed, string SongName, int Id) GetMostRecentlyUsedWorkout();
     }
 }

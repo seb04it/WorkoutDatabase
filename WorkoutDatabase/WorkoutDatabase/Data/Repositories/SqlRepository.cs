@@ -1,8 +1,8 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using WorkoutDataBase.Entities;
+using WorkoutDatabase.Entities;
 
-namespace WorkoutDataBase.Repositories
+namespace WorkoutDatabase.Data.Repositories
 {
     public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
@@ -41,7 +41,7 @@ namespace WorkoutDataBase.Repositories
 
         public void LastUsedWorkout(T item, DateTime lastUsedDate)
         {
-            if (item is Workout workout)
+            if (item is WorkoutEntities workout)
             {
                 workout.LastUsed = lastUsedDate;
             }

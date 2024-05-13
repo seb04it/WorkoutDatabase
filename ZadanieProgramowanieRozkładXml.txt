@@ -1,0 +1,49 @@
+<WorkoutCategorys>
+  <WorkoutCategory Name="Biceps">
+    <Styles>
+      <Style Name="Style1" SongsSum="XX">
+        <Song Name="XX" Length="XX" />
+        <Song Name="XX" Length="XX" />
+      </Style>
+    </Styles>
+  </WorkoutCategory>
+  <WorkoutCategory Name="Triceps">
+    <Styles>
+      <Style Name="Style2" SongsSum="XX">
+        <Song Name="XX" Length="XX" />
+        <Song Name="XX" Length="XX" />
+      </Style>
+    </Styles>
+  </WorkoutCategory>
+  </WorkoutCategory>
+  <WorkoutCategory Name="Pośladki">
+    <Style Name="Style3" SongsSum="XX">
+      <Song Name="XX" Length="XX" />
+      <Song Name="XX" Length="XX" />
+    </Style>
+  </WorkoutCategory>
+</WorkoutCategorys>
+
+==> TO NIE JEST PLIK XML, ALE SZABLON DO ZADANIA DOMOWEGO <==
+==> Twoja aplikacja ma wypełnić ten XML na podstawie danych z plików CSV <==
+
+<Manufacturers>
+  <Manufacturer Name="XX" Country="XX" >
+    <Cars country="Germany" CombinedSum="999">
+      <Car Model="XX" Combined="XX" />
+      <Car Model="XX" Combined="XX" />
+    </Cars>
+  </Manufacturer>
+  <Manufacturer Name="XX" Country="XX" >
+    <Cars country="Germany" CombinedSum="999">
+      <Car Model="XX" Combined="XX" />
+      <Car Model="XX" Combined="XX" />
+    </Cars>
+  </Manufacturer>
+  <Manufacturer Name="XX" Country="XX" >
+    <Cars country="Germany" CombinedSum="999">
+      <Car Model="XX" Combined="XX" />
+      <Car Model="XX" Combined="XX" />
+    </Cars>
+  </Manufacturer>  
+</Manufacturers>

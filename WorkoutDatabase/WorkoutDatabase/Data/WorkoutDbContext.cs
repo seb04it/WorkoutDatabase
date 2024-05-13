@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WorkoutDataBase.Entities;
+using WorkoutDatabase.Entities;
 
-namespace WorkoutDataBase.Data
+namespace WorkoutDatabase.Data
 {
     public class WorkoutDbContext : DbContext
     {
-        public DbSet<Workout> Workouts => Set<Workout>();
+        public DbSet<WorkoutEntities> Workouts => Set<WorkoutEntities>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

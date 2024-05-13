@@ -1,5 +1,5 @@
+using WorkoutDatabase.Data.Repositories;
 using WorkoutDataBase.Entities;
-using WorkoutDataBase.Repositories;
 
 namespace WorkoutDataase.Tests
 {
