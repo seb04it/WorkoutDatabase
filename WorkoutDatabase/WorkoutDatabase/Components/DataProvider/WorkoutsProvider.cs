@@ -81,7 +81,7 @@ namespace WorkoutDatabase.Components.DataProvider
                 .ToList();
         }
 
-        public List<WorkoutEntities> WhereCategoryis(string category)
+        public List<WorkoutEntities> WhereCategoryIs(string category)
         {
             var workouts = _workoutsRepository.GetAll();
             return workouts

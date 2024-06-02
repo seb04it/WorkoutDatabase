@@ -14,8 +14,8 @@ var services = new ServiceCollection();
 services.AddSingleton<IUserCommunication, UserCommunication>();
 services.AddSingleton<IApp, App>();
 
-services.AddSingleton<IRepository<WorkoutEntities>, JsonRepository<WorkoutEntities>>();
-//services.AddSingleton<IRepository<WorkoutEntities>, SqlRepository<WorkoutEntities>>();
+//services.AddSingleton<IRepository<WorkoutEntities>, JsonRepository<WorkoutEntities>>();
+services.AddSingleton<IRepository<WorkoutEntities>, SqlRepository<WorkoutEntities>>();
 services.AddSingleton<IWorkoutsProvider, WorkoutsProvider>();
 services.AddSingleton<ICsvReader, CsvReader>();
 services.AddDbContext<WorkoutDbContext>(options => options.UseSqlServer("Data Source=DESKTOP-TFF998T\\SQLEXPRESS;Initial Catalog=WorkoutAppStrorage;Integrated Security=True;Encrypt=False"));
