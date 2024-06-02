@@ -1,5 +1,7 @@
 ﻿
+using WorkoutDatabase.Components.CsvReader;
 using WorkoutDatabase.Components.DataProvider;
+using WorkoutDatabase.Data;
 using WorkoutDatabase.Data.Repositories;
 using WorkoutDatabase.Entities;
 
@@ -9,11 +11,16 @@ namespace WorkoutDatabase.App
     {
         private readonly IRepository<WorkoutEntities> _workoutRepository;
         private readonly IWorkoutsProvider _workoutsProvider;
+        private readonly WorkoutDbContext _workoutDbContext;
+        private readonly ICsvReader _csvReader;
 
-        public App(IRepository<WorkoutEntities> workoutRepository, IWorkoutsProvider workoutsProvider)
+
+        public App(IRepository<WorkoutEntities> workoutRepository, IWorkoutsProvider workoutsProvider, WorkoutDbContext workoutDbContext, ICsvReader csvReader)
         {
             _workoutRepository = workoutRepository;
             _workoutsProvider = workoutsProvider;
+            _workoutDbContext = workoutDbContext;
+            _csvReader = csvReader;
         }
 
         public void RepositoryWorkoutAdded(object? sender, WorkoutEntities entity)
@@ -76,7 +83,7 @@ namespace WorkoutDatabase.App
                 Console.Write("\n\nAby wyjść naciśnij 'Q'\n" +
                                 "\nWybór: ");
                 var input = Console.ReadLine().ToLower();
-                if(input == "q")
+                if (input == "q")
                 {
                     Console.Clear();
                     exitLoop = true;
@@ -176,7 +183,7 @@ namespace WorkoutDatabase.App
 
         public void RemoveWorkout(IRepository<WorkoutEntities> workoutRepository)
         {
-            Console.WriteLine("\nList Ćwiczeń: ");
+            Console.WriteLine("\nLista Ćwiczeń: ");
             var items = _workoutRepository.GetAll().ToList();
             foreach (var item in items)
             {
@@ -277,8 +284,123 @@ namespace WorkoutDatabase.App
                     }
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
+                Console.WriteLine($"Exception caught: {exception.Message}");
+            }
+        }
+
+        public void SendFileDataToSql()
+        {
+            string filePath = "Resources\\Files\\Workouts.csv";
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("The file does not exist at the specified path.");
+                return;
+            }
+
+            var fileContent = File.ReadAllText(filePath);
+            if (string.IsNullOrWhiteSpace(fileContent))
+            {
+                Console.WriteLine("The file is empty.");
+                return;
+            }
+            var workouts = _csvReader.ProcessWorkouts(filePath);
+
+            if (workouts == null || !workouts.Any())
+            {
+                Console.WriteLine("No workouts found in the CSV file.");
+                return;
+            }
+
+            foreach (var workout in workouts)
+            {
+                _workoutDbContext.Workouts.Add(new WorkoutEntities()
+                {
+                    WorkoutCategory = workout.WorkoutCategory,
+                    SongName = workout.SongName,
+                    ArtistName = workout.ArtistName,
+                    WorkoutLength = workout.WorkoutLength,
+                    LastUsed = workout.LastUsed
+                });
+            }
+            _workoutDbContext.SaveChanges();
+
+        }
+
+        public void EditWorkout(IRepository<WorkoutEntities> workoutRepository)
+        {
+            Console.WriteLine("\nLista Ćwiczeń: ");
+            var items = _workoutRepository.GetAll().ToList();
+            foreach (var item in items)
+            {
+                Console.WriteLine(item);
+            }
+            Console.Write("\nWybierz Id ćwiczenia które chcesz edytować: ");
+            try
+            {
+                if (int.TryParse(Console.ReadLine(), out int input))
+                {
+                    var workoutToEditId = items.FirstOrDefault(item => item.Id == input);
+                    if (workoutToEditId != null)
+                    {
+                        Console.WriteLine("Którą daną chcesz edytować: " +
+                            $"\n1. WorkoutCategory ({workoutToEditId.WorkoutCategory})" +
+                            $"\n2. Song ({workoutToEditId.SongName})" +
+                            $"\n3. Song Artist ({workoutToEditId.ArtistName})" +
+                            $"\n4. Workout Length ({workoutToEditId.WorkoutLength})" +
+                            $"\n5. Workout Last Used ({workoutToEditId.LastUsed})");
+                        var choice = Console.ReadLine().ToUpper();
+                        switch (choice)
+                        {
+                            case "1":
+                                Console.Write($"Podaj zamiennik dla WorkoutCategory ({workoutToEditId.WorkoutCategory}): ");
+                                workoutToEditId.WorkoutCategory = Console.ReadLine();
+                                break;
+                            case "2":
+                                Console.Write($"Podaj zamiennik dla Song ({workoutToEditId.SongName}): ");
+                                workoutToEditId.SongName = Console.ReadLine();
+                                break;
+                            case "3":
+                                Console.Write($"Podaj zamiennik dla Artist ({workoutToEditId.ArtistName}): ");
+                                workoutToEditId.ArtistName = Console.ReadLine();
+                                break;
+                            case "4":
+                                Console.Write($"Podaj zamiennik dla Workout Length ({workoutToEditId.WorkoutLength}): ");
+                                var workoutLenght = Console.ReadLine();
+                                if (TimeSpan.TryParseExact(Console.ReadLine(), "mm':'ss", null, out var workoutLenghtParsed))
+                                {
+                                    workoutToEditId.WorkoutLength = workoutLenghtParsed;
+                                    break;
+                                }
+                                else
+                                {
+                                    throw new Exception("Form of time is invalid. Try (minutes:seconds)");
+                                }
+                            case "5":
+                                Console.WriteLine($"Podaj zamiennik dla Last Used ({workoutToEditId.LastUsed}): ");
+                                if (DateTime.TryParseExact(Console.ReadLine(), "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out var date))
+                                {
+                                    workoutToEditId.LastUsed = date;
+                                    break;
+                                }
+                                else
+                                {
+                                    throw new Exception("Form of date is invalid. Try (day.month.year)");
+                                }        
+                        }
+                        _workoutRepository.SaveWorkout();
+                    }
+                }
+                else
+                {
+                    throw new Exception("ID must be an integer");
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.Clear();
                 Console.WriteLine($"Exception caught: {exception.Message}");
             }
         }

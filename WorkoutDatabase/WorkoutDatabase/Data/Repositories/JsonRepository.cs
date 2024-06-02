@@ -1,5 +1,6 @@
 ﻿
 using System.Text.Json;
+using WorkoutDatabase.App;
 using WorkoutDatabase.Entities;
 
 namespace WorkoutDatabase.Data.Repositories
@@ -7,7 +8,7 @@ namespace WorkoutDatabase.Data.Repositories
     public class JsonRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
         private static readonly string JsonFilePath = "workouts.json";
-        private static readonly string LogFilePath = "workoutsLog.log";
+        private static readonly string LogFilePath = "workoutsJsonLog.log";
         private static readonly string WorkoutCategoryFilePath = "workoutsCategory.json"; //Will implement soon (probably)
 
         protected readonly List<T> _items = new();
@@ -18,14 +19,20 @@ namespace WorkoutDatabase.Data.Repositories
 
         public JsonRepository()
         {
-            LoadDataCategory();
+            //LoadDataCategory();
             LoadData();
         }
 
         public void AddWorkout(T item)
         {
-            int maxId = _items.Count > 0 ? _items.Max(i => i.Id) : 1;
-            item.Id = maxId + 1;
+            if (_items.Count == 0)
+            {
+                item.Id = 1;
+            }
+            else
+            {
+                item.Id = _items.Max(i => i.Id) + 1;
+            }
 
             _items.Add(item);
             SaveWorkout();

@@ -1,120 +1,34 @@
 ﻿using WorkoutDatabase.Entities;
 using WorkoutDatabase.Data.Repositories;
 using WorkoutDatabase.App;
-using System.Xml.Linq;
 using WorkoutDatabase.Components.CsvReader;
-using System.Linq;
-using WorkoutDatabase.Components.CsvReader.Models;
-using System.Reflection.Metadata;
+using WorkoutDatabase.Data;
 
 namespace WorkoutDatabase.UserCommunication
 {
     public class UserCommunication : IUserCommunication
     {
-        private readonly ICsvReader _csvReader;
         private readonly IApp _app;
         private readonly IRepository<WorkoutEntities> _workoutRepository;
+        private readonly ICsvReader _csvReader;
+        private readonly WorkoutDbContext _workoutDbContext;
 
-        public UserCommunication(ICsvReader csvReader, IApp app, IRepository<WorkoutEntities> workoutRepository)
+        public UserCommunication(ICsvReader csvReader,IApp app, IRepository<WorkoutEntities> workoutRepository, WorkoutDbContext workoutDbContext)
         {
             _app = app;
             _csvReader = csvReader;
             _workoutRepository = workoutRepository;
+            _workoutDbContext = workoutDbContext;
+            _workoutDbContext.Database.EnsureCreated();
         }
 
         public void Menu()
         {
-            XmlMethods();
-            //CreateCarsXml();
-            //CreateWorkoutsXml();
-            //QueryCarsXml();
-            Console.WriteLine();
+            //InsertData();
+            //Run();
             StartUpMenu();
         }
-
-        private void XmlMethods()
-        {
-            static void QueryCarsXml()
-            {
-                var document = XDocument.Load("Cars.xml");
-                var names = document
-                    .Descendants("Manufacturer")
-                    .Select(manufacturer => manufacturer.Attribute("Name")?.Value);
-
-                foreach (var name in names)
-                {
-                    Console.WriteLine(name);
-                }
-            }
-
-            void CreateWorkoutsXml()
-            {
-                var workouts = _csvReader.ProcessWorkouts("Resources\\Files\\Workouts.csv");
-                var songs = _csvReader.ProcessSongs("Resources\\Files\\Songs.csv");
-
-
-                var groups = workouts.GroupBy(
-                w => new { w.WorkoutCategory, w.ArtistName },
-               (key, g) => new
-               {
-                   WorkoutCategory = key.WorkoutCategory,
-                   ArtistName = key.ArtistName,
-                   Songs = g.Select(x => x.SongName).Distinct().ToList()
-               });
-
-                var document = new XDocument();
-                var workoutsGroup = new XElement("WorkoutCategories", groups
-                    .Select(g =>
-                    new XElement("WorkoutCategory",
-                        new XAttribute("Name", g.WorkoutCategory),
-                        new XAttribute("CombinedSongsCount", g.Songs.Count()),
-                        new XAttribute("Artist", g.ArtistName),
-                            new XElement("Songs", g.Songs
-                            .Select(song =>
-                            new XElement("Song",
-                                new XAttribute("SongName", song)))))));
-
-                document.Add(workoutsGroup);
-                document.Save("Workout.xml");
-
-
-            }
-
-            void CreateCarsXml()
-            {
-                var cars = _csvReader.ProcessCars("Resources\\Files\\fuel.csv");
-                var manufacturers = _csvReader.ProcessManufacturers("Resources\\Files\\manufacturers.csv");
-
-                var groups = manufacturers.GroupJoin(
-                cars,
-                manufacturer => manufacturer.Name,
-                car => car.Manufacturer,
-                (m, g) => new
-                {
-                    Manufacturer = m,
-                    Car = g
-                });
-
-                var document = new XDocument();
-                var manufacturersGroup = new XElement("Manufacturers", groups
-                    .Select(m =>
-                        new XElement("Manufacturer",
-                            new XAttribute("Name", m.Manufacturer.Name!),
-                            new XAttribute("Country", m.Manufacturer.Country!),
-                                new XElement("Cars",
-                                    new XAttribute("Country", m.Manufacturer.Country!),
-                                    new XAttribute("CombinedSum", m.Car.Sum(c => c.Combined)),
-                                        new XElement("Car", m.Car
-                                            .Select(g =>
-                                           new XElement("Car",
-                                               new XAttribute("Model", g.Name!),
-                                               new XAttribute("Combined", g.Combined))))))));
-
-                document.Add(manufacturersGroup);
-                document.Save("Cars.xml");
-            }
-        }
-
+        
         public void StartUpMenu()
         {
             while (true)
@@ -128,7 +42,9 @@ namespace WorkoutDatabase.UserCommunication
                 "2. Dodaj nowe ruchy\n" +
                 "3. Usuń ruch\n" +
                 "4. Dodaj datę ostatniego użycia ćwiczenia\n" +
-                "5. WorkoutsDataProvider\n" +
+                "5. Edytuj istniejące ćwiczenie\n" +
+                "6. Wyślij dane z pliku do Servera SQL\n"+
+                "7. WorkoutsDataProvider\n" +
                 "Q. Zamknij program\n" +
                 "\nWybór: ");
 
@@ -150,9 +66,16 @@ namespace WorkoutDatabase.UserCommunication
                             _app.LastUsedWorkout(_workoutRepository);
                             break;
                         case "5":
+                            _app.EditWorkout(_workoutRepository);
+                            break;
+                        case "6":
+                            _app.SendFileDataToSql();
+                            break;
+                        case "7":
                             _app.WorkoutProviders();
                             break;
                         case "q":
+                            Console.WriteLine("Dziękuję za skorzystanie z programu :)");
                             return;
                         default:
                             throw new Exception("Invalid choice, try again");
@@ -165,85 +88,71 @@ namespace WorkoutDatabase.UserCommunication
                 }
             }
         }
-
-        private static void QueryCarsXml()
-        {
-            var document = XDocument.Load("Cars.xml");
-            var names = document
-                .Descendants("Manufacturer")
-                .Select(manufacturer => manufacturer.Attribute("Name")?.Value);
-
-            foreach (var name in names)
-            {
-                Console.WriteLine(name);
-            }
-        }
-
-        private void CreateWorkoutsXml()
-        {
-            var workouts = _csvReader.ProcessWorkouts("Resources\\Files\\Workouts.csv");
-            var songs = _csvReader.ProcessSongs("Resources\\Files\\Songs.csv");
-
-
-            var groups = workouts.GroupBy(
-            w => new { w.WorkoutCategory, w.ArtistName },
-           (key, g) => new
-           {
-               WorkoutCategory = key.WorkoutCategory,
-               ArtistName = key.ArtistName,
-               Songs = g.Select(x => x.SongName).Distinct().ToList()
-           });
-
-            var document = new XDocument();
-            var workoutsGroup = new XElement("WorkoutCategories", groups
-                .Select(g =>
-                new XElement("WorkoutCategory",
-                    new XAttribute("Name", g.WorkoutCategory),
-                    new XAttribute("CombinedSongsCount", g.Songs.Count()),
-                    new XAttribute("Artist", g.ArtistName),
-                        new XElement("Songs", g.Songs
-                        .Select(song =>
-                        new XElement("Song",
-                            new XAttribute("SongName", song)))))));
-
-            document.Add(workoutsGroup);
-            document.Save("Workout.xml");
-
-
-        }
-
-        private void CreateCarsXml()
-        {
-            var cars = _csvReader.ProcessCars("Resources\\Files\\fuel.csv");
-            var manufacturers = _csvReader.ProcessManufacturers("Resources\\Files\\manufacturers.csv");
-
-            var groups = manufacturers.GroupJoin(
-            cars,
-            manufacturer => manufacturer.Name,
-            car => car.Manufacturer,
-            (m, g) => new
-            {
-                Manufacturer = m,
-                Car = g
-            });
-
-            var document = new XDocument();
-            var manufacturersGroup = new XElement("Manufacturers", groups
-                .Select(m =>
-                    new XElement("Manufacturer",
-                        new XAttribute("Name", m.Manufacturer.Name!),
-                        new XAttribute("Country", m.Manufacturer.Country!),
-                            new XElement("Cars",
-                                new XAttribute("Country", m.Manufacturer.Country!),
-                                new XAttribute("CombinedSum", m.Car.Sum(c => c.Combined)),
-                                    new XElement("Car", m.Car
-                                        .Select(g =>
-                                       new XElement("Car",
-                                           new XAttribute("Model", g.Name!),
-                                           new XAttribute("Combined", g.Combined))))))));
-
-            document.Add(manufacturersGroup);
-            document.Save("Cars.xml");
-        }
     }
 }
+
+//Run();
+//{
+//InsertData();
+//ReadFromDb();
+//ReadGroupedWorrkoutsFromDb();
+//ChangeWorkout();
+//RemoveWorkout();
+
+
+//}
+
+//private void RemoveWorkout()
+//{
+//    var song1 = this.ReadFirst("Song1");
+//    _workoutDbContext.Remove(song1);
+//    _workoutDbContext.SaveChanges();
+//}
+
+//private void ChangeWorkout()
+//{
+//    var song1 = this.ReadFirst("Song1");
+//    song1.SongName = "Moja Piosenka";
+//    _workoutDbContext.SaveChanges();
+//}
+
+//private WorkoutEntities? ReadFirst(string name)
+//{
+//    return _workoutDbContext.Workouts.FirstOrDefault(workoutSong => workoutSong.SongName == name);
+//}
+
+//private void ReadGroupedWorrkoutsFromDb()
+//{
+//    var groups = _workoutDbContext
+//        .Workouts
+//        .GroupBy(workout => workout.WorkoutCategory)
+//        .Select(workout => new 
+//        {
+//            WorkoutCategory = workout.Key,
+//            Workouts = workout.ToList()
+//        })
+//        .ToList();
+
+//    foreach(var group in groups)
+//    {
+//        Console.WriteLine(group.WorkoutCategory);
+//        Console.WriteLine("======");
+//        foreach (var workout in group.Workouts)
+//        {
+//            Console.WriteLine($"Song: {workout.SongName}, Artist: {workout.ArtistName}");
+//        }
+//        Console.WriteLine();
+//    }
+//}
+
+
+//private void ReadFromDb()
+//{
+//    var workoutsFromDb = _workoutDbContext.Workouts.ToList();
+
+//    foreach (var workoutFromDb in workoutsFromDb)
+//    {
+//        Console.WriteLine($"WorkoutCategory {workoutFromDb.WorkoutCategory}: Song {workoutFromDb.SongName}: Artist {workoutFromDb.ArtistName}");
+//    }
+//}
+

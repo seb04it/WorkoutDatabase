@@ -1,20 +1,20 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using WorkoutDatabase.Components.CsvReader;
 using WorkoutDatabase.Entities;
 
 namespace WorkoutDatabase.Data.Repositories
 {
     public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
-        private static readonly string LogFilePath = "workoutsLog.log";
+        private static readonly string LogFilePath = "workoutsSqlLog.log";
 
-        private readonly DbSet<T> _dbSet;
-        private readonly DbContext _dbContext;
-
-        public SqlRepository(DbContext dbContext)
+        private readonly DbSet<T> _workoutDbSet;
+        private readonly WorkoutDbContext _workoutDbContext;
+        public SqlRepository(WorkoutDbContext dbContext)
         {
-            _dbContext = dbContext;
-            _dbSet = _dbContext.Set<T>();
+            _workoutDbContext = dbContext;
+            _workoutDbSet = _workoutDbContext.Set<T>();
         }
 
         public event EventHandler<T>? WorkoutAdded;
@@ -23,7 +23,7 @@ namespace WorkoutDatabase.Data.Repositories
 
         public void AddWorkout(T item)
         {
-            _dbSet.Add(item);
+            _workoutDbContext.Add(item);
             SaveWorkout();
             WorkoutAdded?.Invoke(this, item);
             LogAudit($"WorkoutAdded {typeof(T).Name} => {item}");
@@ -31,12 +31,12 @@ namespace WorkoutDatabase.Data.Repositories
 
         public IEnumerable<T> GetAll()
         {
-            return _dbSet.ToList();
+            return _workoutDbSet.OrderBy(item => item.Id).ToList();
         }
 
         public T? GetById(int id)
         {
-            return _dbSet.Find(id);
+            return _workoutDbSet.Find(id);
         }
 
         public void LastUsedWorkout(T item, DateTime lastUsedDate)
@@ -53,23 +53,24 @@ namespace WorkoutDatabase.Data.Repositories
 
         public void RemoveWorkout(T item)
         {
-            _dbSet.Remove(item);
+            _workoutDbContext.Remove(item);
             SaveWorkout();
             WorkoutRemoved?.Invoke(this, item);
             LogAudit($"WorkoutRemoved {typeof(T).Name} => {item}");
-        }
+        }  
 
         public virtual void SaveWorkout()
         {
             try
             {
-                _dbContext.SaveChanges();
+                _workoutDbContext.SaveChanges();
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"Error occoured while saving {exception.Message}");
+                Console.WriteLine($"Error occurred while saving: {exception.Message}");
             }
         }
+
         public void LogAudit(string logEntry)
         {
             File.AppendAllText(LogFilePath, $"[{DateTime.Now:dd.MM.yyyy - HH:mm:ss}] - {logEntry}" + Environment.NewLine);

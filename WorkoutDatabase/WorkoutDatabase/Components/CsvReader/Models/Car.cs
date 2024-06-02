@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using WorkoutDatabase.Entities;
 
 namespace WorkoutDatabase.Components.CsvReader.Models
 {
-    public class Car
+    public class Car : EntityBase
     {
         public int Year { get; set; }
         public string Manufacturer { get; set; }

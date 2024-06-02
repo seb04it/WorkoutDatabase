@@ -2,6 +2,7 @@
 using WorkoutDatabase.Components.CsvReader.Models;
 using WorkoutDatabase.Components.CsvReader.Extensions;
 using System.Globalization;
+using System.Text.Json;
 
 namespace WorkoutDatabase.Components.CsvReader
 {
@@ -100,6 +101,26 @@ namespace WorkoutDatabase.Components.CsvReader
                 .ToWorkout();
 
             return workouts.ToList();
+        }
+
+        public List<Workout> ProcessWorkoutsJson(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                return new List<Workout>();
+            }
+
+            try
+            {
+                var json = File.ReadAllText(filePath);
+                var workouts = JsonSerializer.Deserialize<List<Workout>>(json);
+                return workouts ?? new List<Workout>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred while reading JSON: {ex.Message}");
+                return new List<Workout>();
+            }
         }
     }
 

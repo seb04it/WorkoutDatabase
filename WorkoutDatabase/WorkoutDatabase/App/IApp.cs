@@ -18,5 +18,7 @@ namespace WorkoutDatabase.App
         void AddWorkout(IRepository<WorkoutEntities> workoutRepository);
         void RemoveWorkout(IRepository<WorkoutEntities> workoutRepository);
         void LastUsedWorkout(IRepository<WorkoutEntities> workoutRepository);
+        void SendFileDataToSql();
+        void EditWorkout(IRepository<WorkoutEntities> workoutRepository);
     }
 }

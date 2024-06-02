@@ -8,5 +8,6 @@ namespace WorkoutDatabase.Components.CsvReader
         List<Song> ProcessSongs(string filePath);
         List<Car> ProcessCars(string filePath);
         List<Manufacturer> ProcessManufacturers(string filePath);
+        List<Workout> ProcessWorkoutsJson(string filePath);
     }
 }
