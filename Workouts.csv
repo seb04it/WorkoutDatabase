@@ -1,4 +1,0 @@
-WorkoutCategory,SongName,ArtistName,WorkoutLenght,LastUsed,Id
-Biceps,Song1,Artist1,00:03:02,2024-03-07T00:00:00+01:00,1
-Triceps,Song2,Artist2,00:04:03,2024-03-08T00:00:00+01:00,2
-Biceps,Song3,Artist3,00:05:04,2024-03-09T00:00:00+01:00,3

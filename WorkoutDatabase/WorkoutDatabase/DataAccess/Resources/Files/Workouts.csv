@@ -1,7 +1,0 @@
-WorkoutCategory,SongName,ArtistName,WorkoutLenght,LastUsed,Id
-Biceps,Song1,Artist1,00:03:02,2024-03-07,1
-Triceps,Song2,Artist1,00:04:03,2024-03-08,2
-Biceps,Song3,Artist2,00:05:04,2024-03-09,3
-Biceps,Song4,Artist2,00:06:04,2024-03-10,4
-Biceps,Song5,Artist2,00:07:04,2024-03-11,5
-Nogi,Song6,Artist3,00:03:25,2022-04-24,6

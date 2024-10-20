@@ -1,64 +1,48 @@
-﻿//using Microsoft.EntityFrameworkCore;
-//using WorkoutDatabase.Data.Repositories;
-//using WorkoutDatabase.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using System;
+using WorkoutDatabase.ApplicationServices.Repositories;
+using WorkoutDatabase.DataAccess.Data.Entities;
+using WorkoutDatabase.DataAccess.Data;
 
-//namespace WorkoutDatabase.Tests
-//{
-//    public class SqlRepositoryTests
-//    {
-//        public class TestDbContext : DbContext
-//        {
-//            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//            {
-//                optionsBuilder.UseInMemoryDatabase("TestDatabase");
-//            }
+namespace WorkoutDatabase.Tests
+{
+    public class TestSqlRepository<T> : SqlRepository<T> where T : class, IEntity, new()
+    {
+        public TestSqlRepository(WorkoutDbContext dbContext) : base(dbContext) { }
 
-//            protected override void OnModelCreating(ModelBuilder modelBuilder)
-//            {
-//                modelBuilder.Entity<WorkoutEntities>();
-//            }
-//        }
+        public override void SaveItem()
+        {
+            throw new Exception("Simulated error in SaveItem");
+        }
+    }
 
-//        public class TestSqlRepository<T> : SqlRepository<T> where T : class, IEntity, new()
-//        {
-//            public TestSqlRepository(DbContext dbContext) : base(dbContext)
-//            {
-//            }
+    [TestFixture]
+    public class SqlRepositoryTests
+    {
+        private WorkoutDbContext CreateInMemoryDbContext()
+        {
+            var options = new DbContextOptionsBuilder<WorkoutDbContext>()
+                .UseInMemoryDatabase("TestDatabase")
+                .Options;
 
-//            public override void SaveWorkout()
-//            {
-//                throw new Exception("Simulated error in SaveWorkout");
-//            }
-//        }
+            return new WorkoutDbContext(options);
+        }
 
-//        [Test]
-//        public void AddWorkout_SqlRepositoryWorkoutAddedEventInvoked()
-//        {
-//            // Arrange
-//            var dbContext = new TestDbContext();
-//            var workoutRepository = new SqlRepository<WorkoutEntities>(dbContext);
-//            var eventInvoked = false;
-//            workoutRepository.WorkoutAdded += (sender, args) => eventInvoked = true;
+        [Test]
+        public void AddItem_SaveItemExceptionOccurs_SqlRepositoryItemAddedEventNotInvoked()
+        {
+            // Arrange
+            using var dbContext = CreateInMemoryDbContext();
+            var repository = new TestSqlRepository<WorkoutEntity>(dbContext);
+            var eventInvoked = false;
+            repository.ItemAdded += (sender, args) => eventInvoked = true;
 
-//            // Act
-//            workoutRepository.AddWorkout(new WorkoutEntities());
+            var newItem = new WorkoutEntity { SongName = "Test Workout" };
 
-//            // Assert
-//            Assert.IsTrue(eventInvoked);
-//        }
-
-//        [Test]
-//        public void AddWorkout_SaveWorkoutExceptionOccurs_SqlRepositoryWorkoutAddedEventNotInvoked()
-//        {
-//            // Arrange
-//            var dbContext = new TestDbContext();
-//            var workoutRepository = new TestSqlRepository<Workout>(dbContext);
-//            var eventInvoked = false;
-//            workoutRepository.WorkoutAdded += (sender, args) => eventInvoked = true;
-
-//            // Assert
-//            Assert.Throws<Exception>(() => workoutRepository.SaveWorkout());
-//            Assert.IsFalse(eventInvoked);
-//        }
-//    }
-//}
+            // Act & Assert
+            Assert.Throws<Exception>(() => repository.AddItem(newItem));
+            Assert.That(eventInvoked, Is.False);
+        }
+    }
+}

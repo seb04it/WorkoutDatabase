@@ -80,7 +80,7 @@ namespace WorkoutDatabase.ApplicationServices.Repositories
             LogAudit("Items Loaded");
         }
 
-        public void SaveItem()
+        public virtual void SaveItem()
         {
             var json = JsonSerializer.Serialize(_items);
             File.WriteAllText(_jsonFilePath, json);
