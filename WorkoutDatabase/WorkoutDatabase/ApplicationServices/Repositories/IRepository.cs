@@ -1,4 +1,5 @@
-﻿using WorkoutDatabase.DataAccess.Data.Entities;
+﻿
+using WorkoutDatabase.DataAccess.Data.Entities;
 
 namespace WorkoutDatabase.ApplicationServices.Repositories
 {

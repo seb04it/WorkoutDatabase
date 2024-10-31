@@ -68,18 +68,6 @@ namespace WorkoutDatabase.ApplicationServices.Repositories
             LogAudit($"Item updated: {typeof(T).Name} => {item}");
         }
 
-        private void LoadData()
-        {
-            var fileContent = File.ReadAllText(_jsonFilePath);
-            if (!string.IsNullOrWhiteSpace(fileContent))
-            {
-                var json = File.ReadAllText(_jsonFilePath);
-                var deserializedJson = JsonSerializer.Deserialize<IEnumerable<T>>(json);
-                _items.AddRange(deserializedJson);
-            }
-            LogAudit("Items Loaded");
-        }
-
         public virtual void SaveItem()
         {
             var json = JsonSerializer.Serialize(_items);
@@ -90,6 +78,18 @@ namespace WorkoutDatabase.ApplicationServices.Repositories
         public void LogAudit(string logEntry)
         {
             File.AppendAllText(LogFilePath, $"[{DateTime.Now:dd.MM.yyyy - HH:mm:ss}] - {logEntry}" + Environment.NewLine);
+        }
+
+        private void LoadData()
+        {
+            var fileContent = File.ReadAllText(_jsonFilePath);
+            if (!string.IsNullOrWhiteSpace(fileContent))
+            {
+                var json = File.ReadAllText(_jsonFilePath);
+                var deserializedJson = JsonSerializer.Deserialize<IEnumerable<T>>(json);
+                _items.AddRange(deserializedJson);
+            }
+            LogAudit("Items Loaded");
         }
     }
 }

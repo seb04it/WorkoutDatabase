@@ -1,6 +1,6 @@
+
 using WorkoutDatabase.ApplicationServices.Repositories;
 using WorkoutDatabase.DataAccess.Data.Entities;
-
 
 namespace WorkoutDatabase.Tests
 {

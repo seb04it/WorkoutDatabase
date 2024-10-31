@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿
+using Microsoft.Extensions.DependencyInjection;
 using WorkoutDatabase.ApplicationServices.App;
 using WorkoutDatabase.ApplicationServices.Repositories;
 using WorkoutDatabase.DataAccess.Data;

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿
+using System.Globalization;
 using WorkoutDatabase.ApplicationServices.Components.Readers.Models;
 
 namespace WorkoutDatabase.ApplicationServices.Components.Readers.Extensions

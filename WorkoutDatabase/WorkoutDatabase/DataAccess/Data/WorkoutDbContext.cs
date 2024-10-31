@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+﻿
+using Microsoft.EntityFrameworkCore;
 using WorkoutDatabase.DataAccess.Data.Entities;
 
 namespace WorkoutDatabase.DataAccess.Data

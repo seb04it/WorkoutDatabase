@@ -30,7 +30,7 @@ while (run)
                                       "                    -We go jim\n\u001b[0m" +
                                       "\n\x1b[94m░▒▓█ ░▒▓█▓▒░▒▓█▓▒░▒▓░▒▓█ ░▒▓█▓▒░▒▓█▓▒░▒▓\n\u001b[0m" +
                                       "\nWybierz w jaki sposób chcesz korzystać z aplikacji: " +
-                                      "\n\n 1. Zapis w chmurze (SQL Server)" +
+                                      "\n\n 1. Zapis w bazie danych (SQL Server)" +
                                       "\n 2. Praca na pliku" +
                                       "\n\nWybór: ");
     switch (Console.ReadLine())

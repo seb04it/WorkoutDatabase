@@ -1,5 +1,4 @@
 ﻿
-using System.Text.Json;
 using WorkoutDatabase.ApplicationServices.Components.CategoryHandler;
 using WorkoutDatabase.ApplicationServices.Components.DataProvider;
 using WorkoutDatabase.ApplicationServices.Components.Readers;

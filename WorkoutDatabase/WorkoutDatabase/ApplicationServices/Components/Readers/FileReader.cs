@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿
 using System.Text.Json;
 using WorkoutDatabase.ApplicationServices.Components.Readers.Extensions;
 using WorkoutDatabase.ApplicationServices.Components.Readers.Models;
